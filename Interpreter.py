@@ -1,19 +1,16 @@
 from syntax_tree import *
-from defaultMethods import defaultMethod as df
+from 은교햄 import *
 
 class Interpreter:
     def __init__(self):
         self.env = {}
 
     def summonEungyoHam(self):
+        self.은교햄_instance = 은교햄()
+        self.은교햄_instance.create_variable = self.create_variable  # 외부 메서드 주입
+
         self.classes = {
-            "은교햄": {
-                "만약": lambda con, trueMethod, falseMethod: df.만약(con, trueMethod, falseMethod),
-                "반복": lambda i, con, incre, method: df.반복(i, con, incre, method),
-                "출력": lambda outputStr='': df.출력(outputStr),
-                "엔터없이출력": lambda outputStr='': df.엔터없이출력(outputStr),
-                "변수": lambda name, value: self.create_variable(name, value),
-            }
+            "은교햄": self.은교햄_instance
         }
 
     def wrap_lambda(self, node, outer_env):
@@ -45,7 +42,8 @@ class Interpreter:
             cls = self.classes.get(node.class_name)
             if cls is None:
                 raise Exception(f"Unknown class: {node.class_name}")
-            method = cls.get(node.method_name)
+            cls = self.classes["은교햄"]
+            method = getattr(cls, node.method_name)
             if method is None:
                 raise Exception(f"Unknown method: {node.method_name}")
             
@@ -63,6 +61,8 @@ class Interpreter:
         elif isinstance(node, ClassExpr):
             self.summonEungyoHam()
         elif isinstance(node, Variable):
+            if node.name in self.classes:
+                return self.classes[node.name]
             if node.name in env:
                 return env[node.name]
             else:
