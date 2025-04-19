@@ -90,7 +90,9 @@ def parse(tokens):
             return Number(expect_token('NUMBER'))
         elif token_type == 'STRING':
             return String(expect_token('STRING'))
-        elif token_type in ['IDENT', 'PRINT', 'VAR']:
+        elif token_type == 'IDENT':
+            if peek_ahead()[0] == 'DOT':
+                return parse_call_expr(require_semicolon=False)
             return Variable(expect_token('IDENT'))
         elif token_type == 'LAMBDA':
             return parse_lambda_expr()
@@ -131,6 +133,7 @@ def parse(tokens):
 
         return LambdaExpr(params, body)
 
+
     # ---------------------- call ----------------------
 
     def parse_call_expr(require_semicolon=True):
@@ -139,7 +142,6 @@ def parse(tokens):
         expect('DOT')
         method_name = expect_token('IDENT')
         expect('LPAREN')
-
         args = []
         while True:
             token_type, _ = peek()

@@ -13,6 +13,13 @@ class Interpreter:
             "은교햄": self.은교햄_instance
         }
 
+    def iscallable_and_return(self, left, right):
+        if callable(left):
+            left = left()
+        if callable(right):
+            right = right()
+        return left, right
+
     def wrap_lambda(self, node, outer_env):
         def wrapped_func(*args):
             local_env = outer_env.copy()
@@ -35,9 +42,13 @@ class Interpreter:
         
         self.env[var_name] = value_node
 
+    def create_function(self, func_name, func):
+        setattr(self.은교햄_instance, func_name, func)
+
     def eval(self, node, env=None):
         if env is None:
             env = self.env
+            
         if isinstance(node, CallExpr):
             cls = self.classes.get(node.class_name)
             if cls is None:
@@ -49,6 +60,8 @@ class Interpreter:
             
             if node.method_name == "변수":
                 return self.create_variable(node.args[0], self.eval(node.args[1], env))
+            elif node.method_name == '함수':
+                return self.create_function(self.eval(node.args[0], env), self.wrap_lambda(node.args[1], env))
             # 여기 수정: env 넘기기
             arg_vals = [self.eval(arg, env) for arg in node.args]
             return method(*arg_vals)
@@ -70,6 +83,7 @@ class Interpreter:
         elif isinstance(node, BinaryOp):
             left = self.eval(node.left, env)
             right = self.eval(node.right, env)
+            left, right = self.iscallable_and_return(left, right)
             if node.op == '+':
                 return left + right
             elif node.op == '-':

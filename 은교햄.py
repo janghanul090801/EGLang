@@ -16,6 +16,9 @@ class 은교햄:
     def 변수(self, name, value):
         return self.create_variable(name, value)  # 이건 바깥에서 inject 해줘야 함
     
+    def 함수(self, func_name, func):
+        return self.create_function(func_name, func)
+    
     def __str__(self):
         return ""
     

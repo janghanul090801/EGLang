@@ -1,7 +1,7 @@
 class defaultMethod() :
     @staticmethod
     def 만약(con, trueMethod, falseMethod):
-        trueMethod() if con else falseMethod()
+        return trueMethod() if con else falseMethod()
 
     @staticmethod
     def 반복(i, goal, incre, method):
@@ -10,8 +10,15 @@ class defaultMethod() :
 
     @staticmethod
     def 출력(outputStr):
-        print(outputStr)
+        if callable(outputStr):
+            print(outputStr())
+        else :
+            print(outputStr)
 
     @staticmethod
     def 엔터없이출력(outputStr):
-        print(outputStr, end="")
+        if callable(outputStr):
+            print(outputStr(), end="")
+        else :
+            print(outputStr, end="")
+
