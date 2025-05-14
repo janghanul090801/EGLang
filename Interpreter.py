@@ -110,3 +110,6 @@ class Interpreter:
                 return left and right
             else:
                 raise ValueError(f"Unknown operator: {node.op}")
+            
+        elif isinstance(node, TukgumExpr):
+            del self.classes["은교햄"]

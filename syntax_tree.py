@@ -48,3 +48,6 @@ class ClassExpr:
 class ReturnExpr(ASTNode):
     def __init__(self, value):
         self.value = value
+
+class TukgumExpr:
+    pass

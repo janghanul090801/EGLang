@@ -132,7 +132,13 @@ def parse(tokens):
                 break
 
         return LambdaExpr(params, body)
+    
+    # --------------------- tukgum ---------------------
 
+    def parse_tukgum_expr():
+        expect('TUKGUM')
+        expect('SEMICOLON')
+        return TukgumExpr()
 
     # ---------------------- call ----------------------
 
@@ -174,6 +180,8 @@ def parse(tokens):
             exprs.append(parse_summon_expr())
         elif peek()[0] == 'LAMBDA':
             exprs.append(parse_lambda_expr())
+        elif peek()[0] == 'TUKGUM':
+            exprs.append(parse_tukgum_expr())
         else:
             exprs.append(parse_call_expr())
     return exprs
