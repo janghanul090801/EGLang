@@ -31,16 +31,31 @@ class Interpreter:
             return result
         return wrapped_func
 
-    def create_variable(self, var_name_node, value_node):
-        if isinstance(var_name_node, Variable):
-            var_name = var_name_node.name
-        elif isinstance(var_name_node, String):
-            var_name = var_name_node.value.strip('"')
+    def create_variable(self, var_name_node, *value_node_list):
+        if len(value_node_list) == 1:
+            if isinstance(var_name_node, Variable):
+                var_name = var_name_node.name
+            elif isinstance(var_name_node, String):
+                var_name = var_name_node.value.strip('"')
+            else:
+                raise TypeError("변수 이름은 식별자 또는 문자열이어야 합니다.")
+        
+        
+            self.env[var_name] = value_node_list[0]
         else:
-            raise TypeError("변수 이름은 식별자 또는 문자열이어야 합니다.")
-        
-        
-        self.env[var_name] = value_node
+            var_list = []
+            for value_node in value_node_list:
+                if isinstance(var_name_node, Variable):
+                    var_name = var_name_node.name
+                    var_list.append(value_node)
+                elif isinstance(var_name_node, String):
+                    var_name = var_name_node.value.strip('"')
+                    var_list.append(value_node)
+                else:
+                    raise TypeError("변수 이름은 식별자 또는 문자열이어야 합니다.")
+            
+            
+                self.env[var_name] = var_list
 
     def create_function(self, func_name, func):
         setattr(self.은교햄_instance, func_name, func)
@@ -59,7 +74,8 @@ class Interpreter:
                 raise Exception(f"Unknown method: {node.method_name}")
             
             if node.method_name == "변수":
-                return self.create_variable(node.args[0], self.eval(node.args[1], env))
+                evaled_args = [self.eval(arg, env) for arg in node.args[1:]]
+                return self.create_variable(node.args[0], *evaled_args)
             elif node.method_name == '함수':
                 return self.create_function(self.eval(node.args[0], env), self.wrap_lambda(node.args[1], env))
             # 여기 수정: env 넘기기
@@ -113,3 +129,4 @@ class Interpreter:
             
         elif isinstance(node, TukgumExpr):
             del self.classes["은교햄"]
+        

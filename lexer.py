@@ -15,6 +15,7 @@ TOKEN_SPEC = [
     ('STRING',    r'"[^"]*"'),
     ('IMPORT',   r'소환!'),
     ('TUKGUM',   r'특검'),
+    ('COMMENT',  r'🖕[^\n]*'),
     ('IDENT',    r'(?!임시|소환!|특검)[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z_][가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9_]*'),  # 클래스
 ]
 
@@ -28,7 +29,9 @@ def lexer(code):
     for mo in master_pat.finditer(code):
         kind = mo.lastgroup
         value = mo.group()
-        if kind == 'NUMBER':
+        if kind == 'COMMENT':
+            continue
+        elif kind == 'NUMBER':
             value = int(value)
             tokens.append((kind, value))
         elif kind == 'NEWLINE':

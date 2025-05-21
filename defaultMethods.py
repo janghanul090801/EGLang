@@ -22,3 +22,6 @@ class defaultMethod() :
         else :
             print(outputStr, end="")
 
+    @staticmethod
+    def 삽입(var_name:list, value):
+        var_name.append(value)
