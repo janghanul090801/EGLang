@@ -25,3 +25,7 @@ class defaultMethod() :
     @staticmethod
     def 삽입(var_name:list, value):
         var_name.append(value)
+
+    @staticmethod
+    def 인덱싱(var:list, index:int):
+        return var.index(index)

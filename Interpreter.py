@@ -100,6 +100,9 @@ class Interpreter:
             left = self.eval(node.left, env)
             right = self.eval(node.right, env)
             left, right = self.iscallable_and_return(left, right)
+            if isinstance(left, str) or isinstance(right, str):
+                left = str(left)
+                right = str(right)
             if node.op == '+':
                 return left + right
             elif node.op == '-':

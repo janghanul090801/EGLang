@@ -25,6 +25,21 @@ class 은교햄:
     def 삽입(self, var_name : list, value):
         return df.삽입(var_name, value)
     
+    def 인덱싱(self, var:list, index:int):
+        return df.인덱싱(var, index)
+    
+    def 문자열(self, var):
+        return str(var)
+    
+    def 정수(self, var):
+        return int(var)
+    
+    def 실수(self, var):
+        return float(var)
+    
+    def 실행(self, var):
+        var()
+    
     def __str__(self):
         return ""
     
