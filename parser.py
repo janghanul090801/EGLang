@@ -92,7 +92,7 @@ def parse(tokens):
             return String(expect_token('STRING'))
         elif token_type == 'IDENT':
             if peek_ahead()[0] == 'DOT':
-                return parse_call_expr(require_semicolon=False)
+                return parse_call_or_access_expr(require_semicolon=False)
             return Variable(expect_token('IDENT'))
         elif token_type == 'LAMBDA':
             return parse_lambda_expr()
@@ -109,22 +109,21 @@ def parse(tokens):
     # ---------------------- lambda ----------------------
 
     def parse_lambda_expr():
-        expect('LAMBDA')
-        params = []
+        expect('LAMBDA')  # '임시'
 
-        if peek()[0] == 'IDENT' and peek_ahead()[0] == 'COLON':
-            params.append(expect_token('IDENT'))
-        elif peek()[0] == 'IDENT':
+        params = []
+        if peek()[0] == 'IDENT':
             while True:
                 params.append(expect_token('IDENT'))
                 if not match('COMMA'):
                     break
 
         expect('COLON')
+
         body = []
         while True:
             if peek()[0] == 'IDENT' and peek_ahead()[0] == 'DOT':
-                body.append(parse_call_expr(require_semicolon=False))
+                body.append(parse_call_or_access_expr(require_semicolon=False))
             else:
                 body.append(parse_expr())
 
@@ -142,35 +141,32 @@ def parse(tokens):
 
     # ---------------------- call ----------------------
 
-    def parse_call_expr(require_semicolon=True):
-        # ClassName.MethodName(...);
-        class_name = expect_token('IDENT')
+    def parse_call_or_access_expr(require_semicolon=True):
+        class_name = expect_token('IDENT')  # 은교햄
         expect('DOT')
-        method_name = expect_token('IDENT')
-        expect('LPAREN')
-        args = []
-        while True:
-            token_type, _ = peek()
+        member_name = expect_token('IDENT')
 
-            if token_type == 'RPAREN':
-                break
-            elif token_type == 'LAMBDA':
-                args.append(parse_lambda_expr())
-            else:
-                args.append(parse_expr())
+        if peek()[0] == 'LPAREN':
+            # 은교햄.이름(...)
+            expect('LPAREN')
+            args = []
+            while peek()[0] != 'RPAREN':
+                if peek()[0] == 'LAMBDA':
+                    args.append(parse_lambda_expr())
+                else:
+                    args.append(parse_expr())
+                match('COMMA')
+            expect('RPAREN')
+            if require_semicolon:
+                expect("SEMICOLON")
+            return CallExpr(class_name, member_name, args)
 
-            if match('COMMA'):
-                continue
-            elif peek()[0] == 'RPAREN':
-                break
-            else:
-                raise SyntaxError(f"Expected COMMA or RPAREN, got {peek()}")
+        else:
+            # 은교햄.이름;
+            if require_semicolon:
+                expect("SEMICOLON")
+            return PropertyAccessExpr(class_name, member_name)
 
-        expect('RPAREN')
-        if require_semicolon:
-            expect("SEMICOLON")
-
-        return CallExpr(class_name, method_name, args)
 
     # ---------------------- main loop ----------------------
 
@@ -182,6 +178,6 @@ def parse(tokens):
             exprs.append(parse_lambda_expr())
         elif peek()[0] == 'TUKGUM':
             exprs.append(parse_tukgum_expr())
-        else:
-            exprs.append(parse_call_expr())
+        elif peek()[0] == 'IDENT' and peek_ahead()[0] == 'DOT':
+            exprs.append(parse_call_or_access_expr())
     return exprs
