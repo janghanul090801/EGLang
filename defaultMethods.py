@@ -29,3 +29,8 @@ class defaultMethod() :
     @staticmethod
     def 인덱싱(var:list, index:int):
         return var.index(index)
+    
+    @staticmethod
+    def 입력():
+        var = input()
+        return var

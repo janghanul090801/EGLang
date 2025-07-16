@@ -136,8 +136,9 @@ def parse(tokens):
 
     def parse_tukgum_expr():
         expect('TUKGUM')
+        class_name = expect_token('IDENT')
         expect('SEMICOLON')
-        return TukgumExpr()
+        return TukgumExpr(class_name)
 
     # ---------------------- call ----------------------
 

@@ -50,7 +50,8 @@ class ReturnExpr(ASTNode):
         self.value = value
 
 class TukgumExpr:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 class PropertyAccessExpr(ASTNode):
     def __init__(self, class_name, property_name):

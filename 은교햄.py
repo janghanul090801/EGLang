@@ -14,7 +14,8 @@ class 은교햄:
             "인덱싱":self.인덱싱, 
             "문자열":self.문자열, 
             "정수":self.정수, 
-            "실수":self.실수
+            "실수":self.실수,
+            "입력":self.입력
         }
     # 이거 다 변수 리스트에 넣기
     def 만약(self, con, trueMethod, falseMethod):
@@ -43,6 +44,9 @@ class 은교햄:
     
     def 인덱싱(self, var:list, index:int):
         return df.인덱싱(var, index)
+    
+    def 입력(self):
+        return df.입력()
     
     def 문자열(self, var):
         return str(var)
