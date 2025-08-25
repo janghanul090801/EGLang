@@ -27,8 +27,12 @@ class defaultMethod() :
         var_name.append(value)
 
     @staticmethod
+    def 대체(var_name:list, index:int, value):
+        var_name[index] = value
+
+    @staticmethod
     def 인덱싱(var:list, index:int):
-        return var.index(index)
+        return var[index]
     
     @staticmethod
     def 입력():

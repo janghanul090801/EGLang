@@ -11,6 +11,7 @@ class 은교햄:
             "리스트":self.리스트, 
             "함수":self.함수, 
             "삽입":self.삽입, 
+            "대체":self.대체,
             "인덱싱":self.인덱싱, 
             "문자열":self.문자열, 
             "정수":self.정수, 
@@ -41,6 +42,9 @@ class 은교햄:
     
     def 삽입(self, var_name : list, value):
         return df.삽입(var_name, value)
+    
+    def 대체(self, var_name:list, index:int, value):
+        return df.대체(var_name, index, value)
     
     def 인덱싱(self, var:list, index:int):
         return df.인덱싱(var, index)
